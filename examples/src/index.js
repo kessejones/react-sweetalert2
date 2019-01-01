@@ -66,6 +66,61 @@ class App extends Component{
                         });
                     }}>OPEN</button>
                 </section>
+                <section>
+                    <h3>A modal with confirm value</h3>
+                    <button onClick={() => {
+                        this.setState({
+                            swal: {
+                                show: true,
+                                type: 'question',
+                                text: 'Are you sure?',
+                                title: "You won't be able to revert this?",
+                                confirmButtonText: 'Yes, delete it!',
+                                showConfirmButton: true,
+                                showCancelButton: true,
+                                onConfirm: result => {
+                                    if(result.value){
+                                        this.setState({
+                                            swal: {
+                                                show: true,
+                                                title: 'Deleted!',
+                                                text: 'Your file has been deleted.',
+                                                type: 'success'
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    }}>OPEN</button>
+                </section>
+                <section>
+                    <h3>A modal with Input and confirm value</h3>
+                    <button onClick={() => {
+                        this.setState({
+                            swal: {
+                                show: true,
+                                type: 'question',
+                                text: 'Write your name.',
+                                title: "What is your name?",
+                                input: 'text',
+                                showConfirmButton: true,
+                                showCancelButton: true,
+                                onConfirm: result => {
+                                    if(result.value){
+                                        this.setState({
+                                            swal: {
+                                                show: true,
+                                                text: `Hello ${result.value}`,
+                                                type: 'success'
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    }}>OPEN</button>
+                </section>
                 <ReactSweetAlert2 {...this.state.swal}/>
             </div>
         );

@@ -8,16 +8,29 @@ class ReactSweetAlert2 extends Component {
         super(props, context)
     }
 
-    componentWillReceiveProps(nextProps){
-        const {show, showLoading, ...restProps} = nextProps;
+    setupSwal(props){
+        const {show, showLoading, onConfirm, ...restProps} = props;
         if(show){
             swal({
                 ...restProps
-            });
+            }).then(result => {
+                if(onConfirm != null){
+                    onConfirm(result);
+                }
+            }).catch();
             if(showLoading){
                 swal.showLoading();
             }
         }
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps != this.props)
+            this.setupSwal(nextProps);
+    }
+
+    componentDidMount(){
+        this.setupSwal(this.props);
     }
     
     render(){
@@ -80,7 +93,7 @@ ReactSweetAlert2.propsTypes = {
     inputAutoTrim: PropTypes.bool.isRequired,
     inputAttributes: PropTypes.object.isRequired,
     inputValidator: PropTypes.func,
-    validationMesage: PropTypes.string,
+    validationMessage: PropTypes.string,
     inputClass: PropTypes.string,
     progressSteps: PropTypes.arrayOf(PropTypes.string).isRequired,
     currentProgressStep: PropTypes.string,
@@ -89,8 +102,7 @@ ReactSweetAlert2.propsTypes = {
     onOpen: PropTypes.func,
     onClose: PropTypes.func,
     onAfterClose: PropTypes.func,
-    useRejections: PropTypes.bool.isRequired,
-    expectRejections: PropTypes.bool.isRequired,
+    onConfirm: PropTypes.func,
     showLoading: PropTypes.bool.isRequired
 }
 
@@ -149,7 +161,7 @@ ReactSweetAlert2.defaultProps = {
     inputAutoTrim: true,
     inputAttributes: {},
     inputValidator: null,
-    validationMesage: null,
+    validationMessage: null,
     inputClass: null,
     progressSteps: [],
     currentProgressStep: null,
@@ -158,8 +170,7 @@ ReactSweetAlert2.defaultProps = {
     onOpen: null,
     onClose: null,
     onAfterClose: null,
-    useRejections: false,
-    expectRejections: false,
+    onConfirm: null,
     showLoading: false
 }
 
