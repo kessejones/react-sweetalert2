@@ -33,7 +33,7 @@ class App extends Component{
                         }
                     });
                 }}>Alert</button>  
-                <SweetAlert {...swal} />
+                <SweetAlert {...this.state.swal} />
             </div>
         );
     }
@@ -66,7 +66,7 @@ class App extends Component{
                         }
                     });
                 }}>Alert</button>  
-                <SweetAlert {...swal}
+                <SweetAlert {...this.state.swal}
                     onOpen={() => {
                         // code...
                     }}
@@ -108,7 +108,7 @@ class App extends Component{
                         }
                     });
                 }}>Alert</button>  
-                <SweetAlert {...swal}/>
+                <SweetAlert {...this.state.swal}/>
             </div>
         );
     }
