@@ -1,0 +1,32 @@
+{
+  "name": "react-sweetalert2",
+  "version": "0.2.0",
+  "author": {
+    "name": "Kesse Jones"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kessejones/react-sweetalert2.git"
+  },
+  "description": "A sweetalert2 wrapper to ReactJS",
+  "main": "build/react-sweetalert2-bundle.js",
+  "typings": "build/app.d.ts",
+  "license": "Apache-2.0",
+  "scripts": {
+    "start": "webpack --mode production",
+    "dev": "webpack --mode development -w",
+    "dev:example": "cd example && yarn dev",
+    "start:example": "cd example && yarn start"
+  },
+  "devDependencies": {
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.3",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.7"
+  },
+  "dependencies": {
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "sweetalert2": "^8.16.3"
+  }
+}
