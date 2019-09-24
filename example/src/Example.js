@@ -51,6 +51,56 @@ export default function Example(){
             showLoading: true
         });
     }
+    
+    function handleWithFooter() {
+        setSwalProps({
+            show: true,
+            title: 'Modal Title',
+            text: 'Modal text.',
+            footer: 'This is footer',
+        });
+    }
+    
+    function handleWithHTMLContent() {
+        setSwalProps({
+            show: true,
+            title: 'Modal Title',
+            html: '<p>This is text with <strong>HTML</strong></p>',
+        });
+    }
+    
+    function handleWithPosition() {
+        setSwalProps({
+            show: true,
+            title: 'Modal Title',
+            text: 'Modal on top end',
+            position: 'top-end'
+        });
+    }
+    
+    function handleWithTimer() {
+        setSwalProps({
+            show: true,
+            title: 'Modal Title',
+            text: 'Modal will close in 3 seconds',
+            timer: 2000,
+            showCancelButton: false,
+            showConfirmButton: false,
+        });
+    }
+    
+    function handleWithImage() {
+        setSwalProps({
+            show: true,
+            title: 'Sweet!',
+            text: 'Modal with a custom image.',
+            imageUrl: 'https://unsplash.it/400/200',
+            imageWidth: 400,
+            imageHeight: 200,
+            imageAlt: 'Custom image',
+            animation: false
+        });
+    }
 
     function handleWithConfirm() {
         setSwalProps({
@@ -125,43 +175,43 @@ export default function Example(){
                 </div>
                 <div className="container-example">
                     <h4 className="title-example">
-                        Using withSwal function
+                        Modal with footer
                     </h4>
-                    <ClassComponentSwal>
+                    <button onClick={handleWithFooter}>
                         Open
-                    </ClassComponentSwal>
+                    </button>
                 </div>
                 <div className="container-example">
                     <h4 className="title-example">
-                        Using withSwal function
+                        Modal with HTML
                     </h4>
-                    <ClassComponentSwal>
+                    <button onClick={handleWithHTMLContent}>
                         Open
-                    </ClassComponentSwal>
+                    </button>
                 </div>
                 <div className="container-example">
                     <h4 className="title-example">
-                        Using withSwal function
+                        Modal with position
                     </h4>
-                    <ClassComponentSwal>
+                    <button onClick={handleWithPosition}>
                         Open
-                    </ClassComponentSwal>
+                    </button>
                 </div>
                 <div className="container-example">
                     <h4 className="title-example">
-                        Using withSwal function
+                        Modal with timer
                     </h4>
-                    <ClassComponentSwal>
+                    <button onClick={handleWithTimer}>
                         Open
-                    </ClassComponentSwal>
+                    </button>
                 </div>
                 <div className="container-example">
                     <h4 className="title-example">
-                        Using withSwal function
+                        Modal with custom image
                     </h4>
-                    <ClassComponentSwal>
+                    <button onClick={handleWithImage}>
                         Open
-                    </ClassComponentSwal>
+                    </button>
                 </div>
                 <SweetAlert2 {...swalProps} />
             </main>
