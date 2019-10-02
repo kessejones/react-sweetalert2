@@ -1,19 +1,52 @@
-# react-sweetalert2
+# React sweetalert2
 
 ## Install
 
 ```
-$ npm install react-sweetalert2
+$ npm i react-sweetalert2
 ```
+or
+```
+$ yarn add react-sweetalert2
+```
+
 
 ## Usage
 
-### Basic
+#### Functional Component
+
+```javascript
+
+import React, { useState } from 'react';
+import SweetAlert2 from 'react-sweetalert2';
+
+export default function App(){
+    const [swalProps, setSwalProps] = useState({});
+    return (
+        <div>
+            <button onClick={() => {
+                setSwalProps({
+                    show: true,
+                    title: 'Basic Usage',
+                    text: 'Hello World',
+                });
+            }}>
+                Open
+            </button>
+
+            <SweetAlert2 {...swalProps} />
+        </div>
+    );
+}
+
+```
+
+#### Class Component
 ```javascript
 import React, { Component } from 'react';
-import SweetAlert from 'react-sweetalert2';
+import SweetAlert2 from 'react-sweetalert2';
 
-class App extends Component{
+export default class App extends Component{
     constructor(){
         super();
 
@@ -29,89 +62,147 @@ class App extends Component{
                     this.setState({
                         swal: {
                             show: true,
+                            title: 'Basic Usage',
                             text: 'Hello World'
                         }
                     });
                 }}>Alert</button>  
-                <SweetAlert {...this.state.swal} />
+                <SweetAlert2 {...this.state.swal} />
             </div>
         );
     }
 }
+
+
+
+```
+#### Using `withSwal` function
+
+
+##### Inject `swal` props into Functional Component
+
+```javascript
+import React from 'react';
+import { withSwal } from 'react-sweetalert2';
+
+export default withSwal((props, ref) => {
+    const { swal, ...rest } = props;
+
+    function handleClick(){
+        swal.fire({
+            title: 'Example',
+            text: 'Swal injected',
+            type: 'success',
+        });
+    }
+    
+    return (
+        <button onClick={handleClick}>
+            Open
+        </button>
+    );
+});
 
 ```
 
-### With Events
+##### Inject `swal` props into Class Component
+
 ```javascript
-import React, { Component } from 'react';
-import SweetAlert from 'react-sweetalert2';
+import React from 'react';
+import { withSwal } from 'react-sweetalert2';
 
-class App extends Component{
-    constructor(){
-        super();
-
-        this.state = {
-            swal: {}
-        }
+class ExampleComponent extends Component {
+    
+    function handleClick(){
+        this.swal.fire({
+            title: 'Example',
+            text: 'Swal injected',
+            type: 'success',
+        });
     }
 
-    render() {
+    render(){
         return (
-            <div>   
-                <button onClick={() => {
-                    this.setState({
-                        swal: {
-                            show: true,
-                            text: 'Hello World',
-                        }
-                    });
-                }}>Alert</button>  
-                <SweetAlert {...this.state.swal}
-                    onOpen={() => {
-                        // code...
-                    }}
-                    onClose={() => {
-                        // code...
-                    }}
-                />
-            </div>
+            <button onClick={this.handleClick.bind(this)}>
+                Open
+            </button>
         );
     }
 }
+
+export default withSwal(ExampleComponent);
 
 ```
 
+#### Events
 
-### With Loader
+##### Using `SweetAlert2` component
+
 ```javascript
-import React, { Component } from 'react';
-import SweetAlert from 'react-sweetalert2';
+import React, { useState } from 'react';
+import SweetAlert2 from 'react-sweetalert2';
 
-class App extends Component{
-    constructor(){
-        super();
+export default function App(){
+    const [swalProps, setSwalProps] = useState({});
 
-        this.state = {
-            swal: {}
-        }
+    function handleClick(){
+        setSwalProps({
+            show: true,
+            title: 'Example',
+            text: 'Hello World',
+        }); 
     }
 
-    render() {
-        return (
-            <div>   
-                <button onClick={() => {
-                    this.setState({
-                        swal: {
-                            show: true,
-                            showLoading: true,
-                            text: 'Loading...',
-                        }
-                    });
-                }}>Alert</button>  
-                <SweetAlert {...this.state.swal}/>
-            </div>
-        );
-    }
+    return (
+        <div>   
+            <button onClick={handleClick}>
+                Alert
+            </button>  
+            <SweetAlert2 {...swalProps}
+                onOpen={() => {
+                    // run when swal is opened...
+                }}
+                onClose={() => {
+                    // run when swal is closed...
+                }}
+                onConfirm={result => {
+                    // run when clieked in confirm and promise is resolved...
+                }}
+                onError={error => {
+                    // run when promise rejected...
+                }}
+            />
+        </div>
+    );
 }
+```
+
+##### Using `swal` prop injected
+
+
+```javascript
+import React from 'react';
+import { withSwal } from 'react-sweetalert2';
+
+export default withSwal(({ swal }, ref) => (
+    <button onClick={e => {
+        swal.fire({
+            title: 'Example',
+            text: 'Hello World',
+            onOpen: () => {
+                // run when swal is opened...
+            },
+            onClose: () => {
+                // run when swal is closed...
+            }
+        }).then(result => {
+            // when confirmed and promise resolved...
+        }).catch(error => {
+            // when promise rejected...
+        });
+    }}>
+        Show Alert
+    </button>  
+));
 
 ```

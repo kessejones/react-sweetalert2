@@ -1,29 +1,29 @@
 const path = require('path');
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const htmlWebpackPlugin = new HtmlWebpackPlugin({
-    template: path.join(__dirname, "examples/src/index.html"),
-    filename: "./index.html"
-});
 
 module.exports = {
-    entry: path.join(__dirname, "examples/src/index.js"),
+    entry: {
+        app: './src/app.ts'
+    },
+    output: {
+        library: 'react-sweetalert2',
+        libraryTarget: 'umd',
+        path: path.join(__dirname, 'build'),
+        filename: 'react-sweetalert2-bundle.js',
+    },
     module: {
         rules: [{
-                test: /\.(js|jsx)$/,
-                use: "babel-loader",
-                exclude: /node_modules/
-            },
-            {
-                test: /\.css$/,
-                use: ["style-loader", "css-loader"]
-            }
-        ]
+            test: /\.ts(x?)$/,
+            exclude: [/node_modules/, /example/],
+            use: [
+                {
+                    loader: 'ts-loader'
+                }
+            ]
+        }] 
     },
-    plugins: [htmlWebpackPlugin],
     resolve: {
-        extensions: [".js", ".jsx"]
-    },
-    devServer: {
-        port: 3001
+        extensions: [
+            '.tsx', '.ts', '.js', '.jsx'
+        ]
     }
-};
+}

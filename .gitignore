@@ -1,5 +1,4 @@
-# .gitignore
-
-lib/
 node_modules/
-.npmignore
+build/
+yarn.lock
+package-lock.json

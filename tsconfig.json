@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "sourceMap": false,
+        "noImplicitAny": false,
+        "noImplicitReturns": false,
+        "esModuleInterop": true,
+        "module": "commonjs",
+        "target": "es6",
+        "jsx": "react",
+        "declaration": true,
+        "outDir": "./build"
+    },
+    "exclude": [
+        "example", "node_modules", "build"
+    ]
+}
