@@ -16,7 +16,8 @@
     "start": "webpack --mode production",
     "dev": "webpack --mode development -w",
     "dev:example": "cd example && yarn dev",
-    "start:example": "cd example && yarn start"
+    "start:example": "cd example && yarn start",
+    "prepublishOnly": "npm start"
   },
   "devDependencies": {
     "ts-loader": "^6.0.4",
