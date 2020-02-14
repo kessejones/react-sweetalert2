@@ -4,6 +4,7 @@ module.exports = {
     entry: {
         app: './src/app.ts'
     },
+    devtool: "source-map",
     output: {
         library: 'react-sweetalert2',
         libraryTarget: 'umd',
@@ -12,13 +13,9 @@ module.exports = {
     },
     module: {
         rules: [{
-            test: /\.ts(x?)$/,
+            test: /\.tsx?$/,
             exclude: [/node_modules/, /example/],
-            use: [
-                {
-                    loader: 'ts-loader'
-                }
-            ]
+            use: [{ loader: 'awesome-typescript-loader' }]
         }] 
     },
     resolve: {

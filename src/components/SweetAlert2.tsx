@@ -1,14 +1,16 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import Swal, { SweetAlertOptions } from 'sweetalert2';
+// import ReactDOM from 'react-dom';
+
+type ComponentInjectSwal = React.FunctionComponent | React.ComponentClass | React.Element;
 
 interface SweetAlert2Props extends SweetAlertOptions {
     show?: boolean;
     showLoading?: boolean;
     onConfirm?: Function;
     onError?: Function;
+    children?: ComponentInjectSwal;
 }
-
-type ComponentInjectSwal = React.FunctionComponent | React.ComponentClass | React.Element;
 
 export const withSwal = (Component: ComponentInjectSwal) => {
     return forwardRef((props, ref) => (
@@ -16,20 +18,35 @@ export const withSwal = (Component: ComponentInjectSwal) => {
     ));
 }
 
-export default function SweetAlert2(props: SweetAlert2Props) { 
-    const { show, showLoading, onConfirm, onError, ...rest } = props;
 
-    function run(){
-        if(show) {
-            Swal.fire(rest).then(result => onConfirm && onConfirm(result)).catch(error => onError && onError(error));
+const SweetAlert2: React.FunctionComponent<SweetAlert2Props> = (props) => {
+    const { show, showLoading, onConfirm, onError, onBeforeOpen, children, ...rest } = props;
 
-            if(showLoading)
-                Swal.showLoading();
-        } else {
-            Swal.close();
+    useEffect(() => {
+        function run(){
+            if(show) {
+                rest['onBeforeOpen'] = el => {
+                    if(children) {
+                        // let element = Swal.getContent();
+                        // ReactDOM.render(children, element);
+                        // rest.html = element
+                    }
+                    onBeforeOpen && onBeforeOpen(el);
+                };
+    
+                Swal.fire(rest).then(result => onConfirm && onConfirm(result)).catch(error => onError && onError(error));
+    
+                if(showLoading)
+                    Swal.showLoading();
+            } else {
+                Swal.close();
+            }
         }
-    }
 
-    run();
-    return null;
+        run();
+    }, [show, showLoading]);
+
+    return <></>;
 }
+
+export default SweetAlert2;

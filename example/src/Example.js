@@ -214,6 +214,14 @@ export default function Example(){
                     </button>
                 </div>
                 <SweetAlert2 {...swalProps} />
+
+
+                <SweetAlert2 show={true} title="OLA">
+                    <form action="">
+                        <label htmlFor="">Label</label>
+                        <input type="text"/>
+                    </form>
+                </SweetAlert2>
             </main>
             <footer>
                 React SweetAlert2 By <a href="https://github.com/kessejones/">Kesse Jones</a>
