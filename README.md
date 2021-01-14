@@ -206,3 +206,35 @@ export default withSwal(({ swal }, ref) => (
 ));
 
 ```
+
+##### Using content from HTML and React elements
+
+```javascript
+import React, { useState } from 'react';
+import SweetAlert2 from 'react-sweetalert2';
+
+export default function App(){
+    const [swalProps, setSwalProps] = useState({});
+
+    function handleClick(){
+        setSwalProps({
+            show: true,
+            title: 'Example'
+        }); 
+    }
+
+    return (
+        <div>   
+            <button onClick={handleClick}>
+                Alert
+            </button>  
+            <SweetAlert2 {...swalProps}>
+                <h1>
+                    Hello World!
+                </h1>
+            </SweetAlert2>
+        </div>
+    );
+}
+
+```
