@@ -92,7 +92,7 @@ export default withSwal((props, ref) => {
         swal.fire({
             title: 'Example',
             text: 'Swal injected',
-            type: 'success',
+            icon: 'success',
         });
     }
     
@@ -117,7 +117,7 @@ class ExampleComponent extends Component {
         this.swal.fire({
             title: 'Example',
             text: 'Swal injected',
-            type: 'success',
+            icon: 'success',
         });
     }
 
@@ -159,10 +159,10 @@ export default function App(){
                 Alert
             </button>  
             <SweetAlert2 {...swalProps}
-                onOpen={() => {
+                didOpen={() => {
                     // run when swal is opened...
                 }}
-                onClose={() => {
+                didClose={() => {
                     // run when swal is closed...
                 }}
                 onConfirm={result => {
@@ -170,6 +170,9 @@ export default function App(){
                 }}
                 onError={error => {
                     // run when promise rejected...
+                }}
+                onResolve={result => {
+                    // run when promise is resolved...
                 }}
             />
         </div>
@@ -189,10 +192,10 @@ export default withSwal(({ swal }, ref) => (
         swal.fire({
             title: 'Example',
             text: 'Hello World',
-            onOpen: () => {
+            didOpen: () => {
                 // run when swal is opened...
             },
-            onClose: () => {
+            didClose: () => {
                 // run when swal is closed...
             }
         }).then(result => {

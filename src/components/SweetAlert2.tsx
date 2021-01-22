@@ -5,8 +5,9 @@ interface SweetAlert2Props extends SweetAlertOptions {
     show?: boolean;
     showLoading?: boolean;
     onConfirm?: Function;
+    onResolve?: Function;
     onError?: Function;
-    children?: any;
+    children?: React.ReactElement;
 }
 
 export const withSwal = (Component: any) => {
@@ -16,8 +17,8 @@ export const withSwal = (Component: any) => {
 }
 
 
-const SweetAlert2: React.FunctionComponent<SweetAlert2Props> = (props) => {
-    const { show, showLoading, onConfirm, onError, willOpen, children, ...rest } = props;
+const SweetAlert2: React.FC<SweetAlert2Props> = (props) => {
+    const { show, showLoading, onConfirm, onResolve, onError, willOpen, children, ...rest } = props;
 
     useEffect(() => {
         mount();
@@ -29,12 +30,16 @@ const SweetAlert2: React.FunctionComponent<SweetAlert2Props> = (props) => {
                 if(children) {
                     const element = Swal.getContent();
                     ReactDOM.render(children, element);
-                    rest.html = element
                 }
                 willOpen && willOpen(el);
             };
 
-            Swal.fire(rest).then(result => onConfirm && onConfirm(result)).catch(error => onError && onError(error));
+            Swal.fire(rest).then(result => {
+                if(result.isConfirmed)
+                    onConfirm && onConfirm(result);
+
+                onResolve && onResolve(result);
+            }).catch(error => onError && onError(error));
 
             if(showLoading)
                 Swal.showLoading();
