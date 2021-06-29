@@ -24,10 +24,10 @@ const SweetAlert2: React.FC<SweetAlert2Props> = (props) => {
         mount();
     }, [props]);
 
-    function mount(){
-        if(show) {
+    function mount() {
+        if (show) {
             rest['willOpen'] = el => {
-                if(children) {
+                if (children) {
                     const element = Swal.getContent();
                     ReactDOM.render(children, element);
                 }
@@ -35,13 +35,13 @@ const SweetAlert2: React.FC<SweetAlert2Props> = (props) => {
             };
 
             Swal.fire(rest).then(result => {
-                if(result.isConfirmed)
+                if (result.isConfirmed)
                     onConfirm && onConfirm(result);
 
                 onResolve && onResolve(result);
             }).catch(error => onError && onError(error));
 
-            if(showLoading)
+            if (showLoading)
                 Swal.showLoading();
         } else {
             Swal.close();
