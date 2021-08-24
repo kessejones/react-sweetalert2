@@ -1,4 +1,5 @@
 node_modules/
 examples/
+__tests__/
 tsconfig.json
-webpack.config.js
+rollup.config.js
