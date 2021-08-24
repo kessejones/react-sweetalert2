@@ -1,13 +1,14 @@
-import React, { ForwardedRef, useEffect } from 'react';
+import React, { ForwardedRef, useEffect, ReactElement } from 'react';
 import Swal, { SweetAlertOptions } from 'sweetalert2';
 import ReactDOM from 'react-dom';
+
 export interface SweetAlert2Props extends SweetAlertOptions {
     show?: boolean;
     showLoading?: boolean;
     onConfirm?: Function;
     onResolve?: Function;
     onError?: Function;
-    children?: React.ReactElement;
+    children?: ReactElement;
 }
 
 export const withSwal = <ComponentProps extends unknown = any>(Component: any) => {
@@ -28,7 +29,9 @@ const SweetAlert2 = (props: SweetAlert2Props) => {
             rest['willOpen'] = (el: HTMLElement) => {
                 if (children) {
                     const element = Swal.getContent();
-                    ReactDOM.render(children, element);
+                    if (element) {
+                        ReactDOM.render(children, element);
+                    }
                 }
                 willOpen && willOpen(el);
             };
