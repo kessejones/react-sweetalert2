@@ -38,6 +38,13 @@ const SweetAlert2 = (props: SweetAlert2Props) => {
                     onConfirm && onConfirm(result);
 
                 onResolve && onResolve(result);
+
+                if(children) {
+                    const element = Swal.getContent();
+                    if (element) {
+                        ReactDOM.unmountComponentAtNode(element);
+                    }
+                } 
             }).catch(error => onError && onError(error));
 
             if (showLoading)
