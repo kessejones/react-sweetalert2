@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { ForwardedRef, useEffect } from 'react';
 import Swal, { SweetAlertOptions } from 'sweetalert2';
 import ReactDOM from 'react-dom';
-interface SweetAlert2Props extends SweetAlertOptions {
+export interface SweetAlert2Props extends SweetAlertOptions {
     show?: boolean;
     showLoading?: boolean;
     onConfirm?: Function;
@@ -10,14 +10,13 @@ interface SweetAlert2Props extends SweetAlertOptions {
     children?: React.ReactElement;
 }
 
-export const withSwal = (Component: any) => {
-    return React.forwardRef((props, ref) => (
+export const withSwal = <ComponentProps extends unknown = any>(Component: any) => {
+    return React.forwardRef((props: ComponentProps, ref: ForwardedRef<any>) => (
         <Component ref={ref} swal={Swal} {...props} />
     ));
 }
 
-
-const SweetAlert2: React.FC<SweetAlert2Props> = (props) => {
+const SweetAlert2 = (props: SweetAlert2Props) => {
     const { show, showLoading, onConfirm, onResolve, onError, willOpen, children, ...rest } = props;
 
     useEffect(() => {
@@ -26,7 +25,7 @@ const SweetAlert2: React.FC<SweetAlert2Props> = (props) => {
 
     function mount() {
         if (show) {
-            rest['willOpen'] = el => {
+            rest['willOpen'] = (el: HTMLElement) => {
                 if (children) {
                     const element = Swal.getContent();
                     ReactDOM.render(children, element);
