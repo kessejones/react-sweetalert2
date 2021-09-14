@@ -23,6 +23,11 @@
         "jsx": "react"
     },
     "include": [
-        "src"
+        "src/**/*"
     ],
+    "exclude": [
+        "__test__",
+        "node_modules",
+        "build"
+    ]
 }
