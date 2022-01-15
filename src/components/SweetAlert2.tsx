@@ -1,6 +1,7 @@
-import React, { ForwardedRef, ReactElement } from 'react';
+import React, { ForwardedRef, ReactElement, useEffect } from 'react';
 import Swal, { SweetAlertOptions, SweetAlertResult } from 'sweetalert2';
 import ReactDOM from 'react-dom';
+import { useForceRerendering } from '../Hooks';
 
 export type SweetAlert2Props = {
     show?: boolean;
@@ -17,18 +18,40 @@ export const withSwal = <ComponentProps extends unknown = any>(Component: any) =
     ));
 }
 
-export default class SweetAlert2 extends React.Component<SweetAlert2Props> {
+export default function SweetAlert2 (props: SweetAlert2Props) {
+    const forceRerendering = useForceRerendering();
 
-    private mountSwal(){
-        const { show, onConfirm, willOpen, onResolve, onError, children, ...rest } = this.props;
-
-        if(!show) {
+    useEffect(() => {
+        if (props.show) {
+            mountSwal();
+            props.showLoading && Swal.showLoading();
+        } else {
             Swal.close();
-            return;
         }
+    }, [props.show]);
+
+    useEffect(() => {
+        if (props.show && props.showLoading) {
+            Swal.showLoading();
+        } else {
+            Swal.hideLoading();
+        }
+    }, [props.showLoading]);
+
+    function mountSwal(){
+        const { 
+            show, 
+            showLoading, 
+            onConfirm, 
+            willOpen, 
+            onResolve, 
+            onError, 
+            children, 
+            ...rest 
+        } = props;
 
         rest['willOpen'] = (el: HTMLElement) => {
-            this.mountChildrenIfNeeded(this.props.children);
+            forceRerendering();
             willOpen && willOpen(el);
         }
 
@@ -40,54 +63,12 @@ export default class SweetAlert2 extends React.Component<SweetAlert2Props> {
         }).catch(error => onError && onError(error));
     }
 
-    private mountChildrenIfNeeded(children?: ReactElement){
-        if(!children) return;
-
-        this.mountChildren(children); 
+    const swalContainer = Swal.getHtmlContainer();
+    if (swalContainer && !props.html) {
+        swalContainer.style.display = props.children ? 'block' : 'none';
+        return ReactDOM.createPortal(props.children, swalContainer);
     }
 
-    private mountChildren(children: ReactElement){
-        const swalContainer = Swal.getHtmlContainer();
-        if (!swalContainer) return;
-
-        ReactDOM.render(children, swalContainer);
-        swalContainer.style.display = 'block'
-    }
-    
-    private unmountChildren(){
-        const swalContainer = Swal.getHtmlContainer();
-        if (!swalContainer) return;
-
-        ReactDOM.unmountComponentAtNode(swalContainer);
-        swalContainer.style.display = 'none'
-    }
-
-    private updateChildren(children?: ReactElement) {
-        if(children) {
-            this.mountChildren(children);
-        } else{
-            this.unmountChildren();
-        }
-    }
-
-    shouldComponentUpdate(nextProps: any, nextState: any, nextContext: any){
-        if(nextProps.children != this.props.children) {
-            this.updateChildren(nextProps.children)
-        }
-
-        return (nextProps.show && !this.props.show);
-    }
-
-    componentDidUpdate(){
-        this.mountSwal();
-    }
-
-    componentDidMount(){
-        this.mountSwal();
-    }
-
-    render() {
-        return <></>;
-    }
+    return <></>
 }
 
