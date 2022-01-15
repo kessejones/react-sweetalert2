@@ -1,15 +1,15 @@
-import React, { ForwardedRef, useEffect, ReactElement } from 'react';
-import Swal, { SweetAlertOptions } from 'sweetalert2';
+import React, { ForwardedRef, ReactElement } from 'react';
+import Swal, { SweetAlertOptions, SweetAlertResult } from 'sweetalert2';
 import ReactDOM from 'react-dom';
 
-export interface SweetAlert2Props extends SweetAlertOptions {
+export type SweetAlert2Props = {
     show?: boolean;
     showLoading?: boolean;
     onConfirm?: Function;
     onResolve?: Function;
     onError?: Function;
     children?: ReactElement;
-}
+} & SweetAlertOptions;
 
 export const withSwal = <ComponentProps extends unknown = any>(Component: any) => {
     return React.forwardRef((props: ComponentProps, ref: ForwardedRef<any>) => (
@@ -17,47 +17,77 @@ export const withSwal = <ComponentProps extends unknown = any>(Component: any) =
     ));
 }
 
-const SweetAlert2 = (props: SweetAlert2Props) => {
-    const { show, showLoading, onConfirm, onResolve, onError, willOpen, children, ...rest } = props;
+export default class SweetAlert2 extends React.Component<SweetAlert2Props> {
 
-    useEffect(() => {
-        mount();
-    }, [props]);
+    private mountSwal(){
+        const { show, onConfirm, willOpen, onResolve, onError, children, ...rest } = this.props;
 
-    function mount() {
-        if (show) {
-            rest['willOpen'] = (el: HTMLElement) => {
-                if (children) {
-                    const element = Swal.getContent();
-                    if (element) {
-                        ReactDOM.render(children, element);
-                    }
-                }
-                willOpen && willOpen(el);
-            };
-
-            Swal.fire(rest).then(result => {
-                if (result.isConfirmed)
-                    onConfirm && onConfirm(result);
-
-                onResolve && onResolve(result);
-
-                if(children) {
-                    const element = Swal.getContent();
-                    if (element) {
-                        ReactDOM.unmountComponentAtNode(element);
-                    }
-                } 
-            }).catch(error => onError && onError(error));
-
-            if (showLoading)
-                Swal.showLoading();
-        } else {
+        if(!show) {
             Swal.close();
+            return;
+        }
+
+        rest['willOpen'] = (el: HTMLElement) => {
+            this.mountChildrenIfNeeded(this.props.children);
+            willOpen && willOpen(el);
+        }
+
+        Swal.fire(rest).then((result: SweetAlertResult) => {
+            if (result.isConfirmed)
+                onConfirm && onConfirm(result);
+
+            onResolve && onResolve(result);
+        }).catch(error => onError && onError(error));
+    }
+
+    private mountChildrenIfNeeded(children?: ReactElement){
+        if(!children) return;
+
+        this.mountChildren(children); 
+    }
+
+    private mountChildren(children: ReactElement){
+        const swalContainer = Swal.getHtmlContainer();
+        if (!swalContainer) return;
+
+        ReactDOM.render(children, swalContainer);
+        swalContainer.style.display = 'block'
+    }
+    
+    private unmountChildren(){
+        const swalContainer = Swal.getHtmlContainer();
+        if (!swalContainer) return;
+
+        ReactDOM.unmountComponentAtNode(swalContainer);
+        swalContainer.style.display = 'none'
+    }
+
+    private updateChildren(children?: ReactElement) {
+        if(children) {
+            this.mountChildren(children);
+        } else{
+            this.unmountChildren();
         }
     }
 
-    return <></>;
+    shouldComponentUpdate(nextProps: any, nextState: any, nextContext: any){
+        if(nextProps.children != this.props.children) {
+            this.updateChildren(nextProps.children)
+        }
+
+        return (nextProps.show && !this.props.show);
+    }
+
+    componentDidUpdate(){
+        this.mountSwal();
+    }
+
+    componentDidMount(){
+        this.mountSwal();
+    }
+
+    render() {
+        return <></>;
+    }
 }
 
-export default SweetAlert2;
