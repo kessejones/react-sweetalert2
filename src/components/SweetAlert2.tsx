@@ -24,7 +24,10 @@ export default function SweetAlert2 (props: SweetAlert2Props) {
     useEffect(() => {
         if (props.show) {
             mountSwal();
-            props.showLoading && Swal.showLoading();
+
+            if (props.showLoading) {
+                Swal.showLoading();
+            }
         } else {
             Swal.close();
         }

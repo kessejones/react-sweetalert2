@@ -1,7 +1,5 @@
 import packageJson from './package.json';
 import typescript from 'rollup-plugin-typescript2';
-// import serve from 'rollup-plugin-serve';
-// import livereload from 'rollup-plugin-livereload';
 
 const external = [
     ...Object.keys(packageJson.dependencies || {}),
@@ -21,15 +19,6 @@ export default {
     ],
     plugins: [
         typescript(),
-        // serve({
-        //     open: true,
-        //     verbose: true,
-        //     contentBase: ['', 'dist'],
-        //     historyApiFallback: true,
-        //     host: 'localhost',
-        //     port: 3000,
-        // }),
-        // livereload({ watch: 'dist' }),
     ],
     external,
 };
