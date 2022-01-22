@@ -1,3 +1,6 @@
+[![Test](https://github.com/kessejones/react-sweetalert2/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/kessejones/react-sweetalert2/actions/workflows/test.yml)
+[![Coverage Status](https://img.shields.io/coveralls/github/kessejones/react-sweetalert2)](https://coveralls.io/github/kessejones/react-sweetalert2?branch=master)
+
 # React sweetalert2
 
 ## Install
