@@ -1,38 +1,141 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
 import SweetAlert2, { withSwal } from '../src';
 import Button from './components/Button';
+import Swal from 'sweetalert2';
+import { render, fireEvent, waitFor, cleanup, screen } from '@testing-library/react';
+import '@testing-library/jest-dom'
 
-test("should return null when render component", () => {
-    const results = renderer.create(<SweetAlert2 />);
-    const tree = results.toTree();
-    expect(tree?.rendered).toBeNull();
-});
+describe('SweetAlert2', () => {
+    beforeEach(() => {
+        cleanup();
+    });
 
-test('should exist property swal when using withSwal in a component', () => {
-    const SwalButton = withSwal(Button);
-    
-    const results = renderer.create(<SwalButton />);
-    const tree = results.toTree();
+    it('should not render sweetalert container', () => {
+        const { baseElement } = render(<SweetAlert2 />);
+        const swal2Container = baseElement.querySelector('.swal2-container')
+        expect(swal2Container).toBeNull();
+    });
 
-    expect(tree?.props.swal).toBeDefined();
-});
+    it('should render sweetalert container', () => {
+        const { baseElement } = render(<SweetAlert2 show={true}/>);
+        const swal2Container = baseElement.querySelector('.swal2-container')
+        expect(swal2Container).not.toBeNull();
+    });
 
-test('should render a button when wrapping a component with withSwal', () => {
-    const SwalButton = withSwal(Button);
-    
-    const results = renderer.create(<SwalButton />);
-    const tree = results.toTree();
-    expect(tree?.rendered).not.toBeNull();
-});
+    it('should not render loading spinner', () => {
+        const { baseElement } = render(<SweetAlert2 show={true}/>);
+        const swal2Loading = baseElement.querySelector('.swal2-loading')
+        expect(swal2Loading).toBeNull();
+    });
 
-test('should exist property children of type h1', () => {    
-    const results = renderer.create(
-        <SweetAlert2>
-            <h1>Hello</h1>
-        </SweetAlert2>
-    );
+    it('should render loading spinner', () => {
+        const { baseElement } = render(<SweetAlert2 show={true} showLoading={true}/>);
+        const swal2Loading = baseElement.querySelector('.swal2-loading')
+        expect(swal2Loading).not.toBeNull();
+    });
 
-    const tree = results.toTree();
-    expect(tree?.props.children.type).toEqual('h1');
+    it('should render sweetalert html attribute', () => {
+        const { baseElement } = render(<SweetAlert2 show={true} html={"<h1>hello</h1>"}/>);
+        const swal2Html = baseElement.querySelector('#swal2-html-container')
+        const htmlContent = swal2Html?.querySelector('h1');
+        const style = swal2Html?.getAttribute('style');
+        expect(style?.includes('display: block')).toBeTruthy();
+        expect(htmlContent).not.toBeNull();
+    });
+
+    it('should render sweetalert children', () => {
+        const { baseElement } = render(
+            <SweetAlert2 show={true}>
+                <p>hello</p>
+            </SweetAlert2>
+        );
+
+        const swal2Html = baseElement.querySelector('#swal2-html-container')
+        const htmlContent = swal2Html?.querySelector('p');
+        const style = swal2Html?.getAttribute('style');
+        expect(style?.includes('display: block')).toBeTruthy();
+        expect(htmlContent).not.toBeNull();
+    });
+
+    it('should call on confirm event when click in confirm', async () => {
+        global.scrollTo = jest.fn();
+        const onConfirm = jest.fn();
+
+        const { baseElement } = render(
+            <SweetAlert2
+                show={true} 
+                onConfirm={(result: any) => onConfirm(result) } 
+            />
+        );
+
+        const confirmButton = baseElement.querySelector('.swal2-confirm');
+        expect(confirmButton).not.toBeNull();
+
+        fireEvent.click(confirmButton as Element);
+        await waitFor(() => !baseElement.querySelector('.swal2-container'))
+
+        expect(onConfirm).toHaveBeenCalled();
+    });
+
+    it('should call on resolve event when close swal', async () => {
+        global.scrollTo = jest.fn();
+        const onResolve = jest.fn();
+
+        const { baseElement } = render(
+            <SweetAlert2
+                show={true} 
+                showCancelButton={true}
+                onResolve={() => onResolve() } 
+            />
+        );
+
+        const cancelButton = baseElement.querySelector('.swal2-cancel');
+        expect(cancelButton).not.toBeNull();
+
+        fireEvent.click(cancelButton as Element);
+        await waitFor(() => !baseElement.querySelector('.swal2-container'))
+
+        expect(onResolve).toHaveBeenCalled();
+    });
+
+    it('should call on error event', async () => {
+        global.scrollTo = jest.fn();
+        const onError = jest.fn();
+
+        const { baseElement } = render(
+            <SweetAlert2
+                show={true} 
+                onError={() => onError()}
+                willOpen={() => {
+                    throw new Error('error')
+                }} 
+            />
+        );
+
+        await waitFor(() => !baseElement.querySelector('.swal2-container'))
+        expect(onError).toHaveBeenCalled();
+    });
+
+
+    it('should render component using withSwal', () => {
+        const SwalButton = withSwal(Button);
+
+        render(<SwalButton text="Hello"/>);
+        const swalButtonElement = screen.getByText('Hello');
+
+        expect(swalButtonElement).not.toBeNull();
+        expect(swalButtonElement).toHaveTextContent('Hello');
+    });
+
+    it('should render swal popup when button clicked', () => {
+        const SwalButton = withSwal(Button);
+
+        const { baseElement } = render(<SwalButton text="Hello"/>);
+        const swalButtonElement = screen.getByText('Hello');
+
+        fireEvent.click(swalButtonElement);
+
+        const swalContainer = baseElement.querySelector('.swal2-container');
+        expect(swalContainer).not.toBeNull();
+    });
 });
