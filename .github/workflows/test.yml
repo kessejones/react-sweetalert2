@@ -23,8 +23,15 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
+
       - name: Install Dependecies
         uses: bahmutov/npm-install@v1
+
+      - name: Install React
+        run: npm i -g react react-dom
+
+      - name: Link Dependencies
+        run: npm link react && npm link react-dom
 
       - name: Run Jest
         run: yarn test --coverage
