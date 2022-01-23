@@ -1,5 +1,7 @@
 node_modules/
 examples/
 __tests__/
+.github/
 tsconfig.json
 rollup.config.js
+jest.config.ts
