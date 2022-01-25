@@ -1,7 +1,6 @@
 import React from 'react';
 import SweetAlert2, { withSwal } from '../src';
 import Button from './components/Button';
-import Swal from 'sweetalert2';
 import { render, fireEvent, waitFor, cleanup, screen } from '@testing-library/react';
 import '@testing-library/jest-dom'
 
