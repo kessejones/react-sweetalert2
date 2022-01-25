@@ -1,5 +1,6 @@
 node_modules/
 examples/
+coverage/
 __tests__/
 .github/
 tsconfig.json
