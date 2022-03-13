@@ -22,6 +22,7 @@
     ],
     "license": "Apache-2.0",
     "main": "build/index.js",
+    "dist": "dist/react-sweetalert2.js",
     "module": "build/index.esm.js",
     "types": "build/index.d.ts",
     "scripts": {
