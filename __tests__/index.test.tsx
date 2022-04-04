@@ -12,33 +12,48 @@ describe('SweetAlert2', () => {
     it('should not render sweetalert container', () => {
         const { baseElement } = render(<SweetAlert2 />);
         const swal2Container = baseElement.querySelector('.swal2-container')
+
         expect(swal2Container).toBeNull();
     });
 
     it('should render sweetalert container', () => {
-        const { baseElement } = render(<SweetAlert2 show={true}/>);
+        const { baseElement } = render(<SweetAlert2 show={true} />);
         const swal2Container = baseElement.querySelector('.swal2-container')
+        const swal2HtmlContainer = swal2Container?.querySelector('#swal2-html-container')
+
         expect(swal2Container).not.toBeNull();
+        expect(swal2HtmlContainer).toHaveStyle('display: none');
+    });
+
+    it('should show sweetalert container if text props isset', () => {
+        const { baseElement } = render(<SweetAlert2 show={true} text={'alert'} />);
+        const swal2Container = baseElement.querySelector('.swal2-container')
+        const swal2HtmlContainer = swal2Container?.querySelector('#swal2-html-container')
+
+        expect(swal2Container).not.toBeNull();
+        expect(swal2HtmlContainer).toHaveStyle('display: block');
     });
 
     it('should not render loading spinner', () => {
-        const { baseElement } = render(<SweetAlert2 show={true}/>);
+        const { baseElement } = render(<SweetAlert2 show={true} />);
         const swal2Loading = baseElement.querySelector('.swal2-loading')
+
         expect(swal2Loading).toBeNull();
     });
 
     it('should render loading spinner', () => {
-        const { baseElement } = render(<SweetAlert2 show={true} showLoading={true}/>);
+        const { baseElement } = render(<SweetAlert2 show={true} showLoading={true} />);
         const swal2Loading = baseElement.querySelector('.swal2-loading')
+
         expect(swal2Loading).not.toBeNull();
     });
 
     it('should render sweetalert html attribute', () => {
-        const { baseElement } = render(<SweetAlert2 show={true} html={"<h1>hello</h1>"}/>);
-        const swal2Html = baseElement.querySelector('#swal2-html-container')
-        const htmlContent = swal2Html?.querySelector('h1');
-        const style = swal2Html?.getAttribute('style');
-        expect(style?.includes('display: block')).toBeTruthy();
+        const { baseElement } = render(<SweetAlert2 show={true} html={"<h1>hello</h1>"} />);
+        const swal2HtmlContainer = baseElement.querySelector('#swal2-html-container')
+        const htmlContent = swal2HtmlContainer?.querySelector('h1');
+
+        expect(swal2HtmlContainer).toHaveStyle('display: block');
         expect(htmlContent).not.toBeNull();
     });
 
@@ -49,10 +64,10 @@ describe('SweetAlert2', () => {
             </SweetAlert2>
         );
 
-        const swal2Html = baseElement.querySelector('#swal2-html-container')
-        const htmlContent = swal2Html?.querySelector('p');
-        const style = swal2Html?.getAttribute('style');
-        expect(style?.includes('display: block')).toBeTruthy();
+        const swal2HtmlContainer = baseElement.querySelector('#swal2-html-container')
+        const htmlContent = swal2HtmlContainer?.querySelector('p');
+
+        expect(swal2HtmlContainer).toHaveStyle('display: block');
         expect(htmlContent).not.toBeNull();
     });
 
@@ -62,8 +77,8 @@ describe('SweetAlert2', () => {
 
         const { baseElement } = render(
             <SweetAlert2
-                show={true} 
-                onConfirm={(result: any) => onConfirm(result) } 
+                show={true}
+                onConfirm={(result: any) => onConfirm(result)}
             />
         );
 
@@ -82,9 +97,9 @@ describe('SweetAlert2', () => {
 
         const { baseElement } = render(
             <SweetAlert2
-                show={true} 
+                show={true}
                 showCancelButton={true}
-                onResolve={() => onResolve() } 
+                onResolve={() => onResolve()}
             />
         );
 
@@ -103,11 +118,11 @@ describe('SweetAlert2', () => {
 
         const { baseElement } = render(
             <SweetAlert2
-                show={true} 
+                show={true}
                 onError={() => onError()}
                 willOpen={() => {
                     throw new Error('error')
-                }} 
+                }}
             />
         );
 
@@ -119,7 +134,7 @@ describe('SweetAlert2', () => {
     it('should render component using withSwal', () => {
         const SwalButton = withSwal(Button);
 
-        render(<SwalButton text="Hello"/>);
+        render(<SwalButton text="Hello" />);
         const swalButtonElement = screen.getByText('Hello');
 
         expect(swalButtonElement).not.toBeNull();
@@ -129,12 +144,18 @@ describe('SweetAlert2', () => {
     it('should render swal popup when button clicked', () => {
         const SwalButton = withSwal(Button);
 
-        const { baseElement } = render(<SwalButton text="Hello"/>);
-        const swalButtonElement = screen.getByText('Hello');
+        const { baseElement } = render(<SwalButton text="Hello" didOpen={() => {
+            const swal2HtmlContainer = baseElement?.querySelector('#swal2-html-container')
+            expect(swal2HtmlContainer).toHaveStyle('display: block');
+        }} />);
 
+        const swal2HtmlContainer = baseElement?.querySelector('#swal2-html-container')
+        expect(swal2HtmlContainer).toHaveStyle('display: none');
+
+        const swalButtonElement = screen.getByText('Hello');
         fireEvent.click(swalButtonElement);
 
-        const swalContainer = baseElement.querySelector('.swal2-container');
+        const swalContainer = baseElement?.querySelector('.swal2-container');
         expect(swalContainer).not.toBeNull();
     });
 });

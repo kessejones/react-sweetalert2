@@ -12,13 +12,15 @@ export type SweetAlert2Props = {
     children?: ReactElement;
 } & SweetAlertOptions;
 
-export const withSwal = <ComponentProps extends unknown = any>(Component: any) => {
+export const withSwal = <ComponentProps extends unknown = any>(
+    Component: any
+) => {
     return React.forwardRef((props: ComponentProps, ref: ForwardedRef<any>) => (
         <Component ref={ref} swal={Swal} {...props} />
     ));
-}
+};
 
-export default function SweetAlert2 (props: SweetAlert2Props) {
+export default function SweetAlert2(props: SweetAlert2Props) {
     const forceRerendering = useForceRerendering();
 
     useEffect(() => {
@@ -41,37 +43,44 @@ export default function SweetAlert2 (props: SweetAlert2Props) {
         }
     }, [props.showLoading]);
 
-    function mountSwal(){
-        const { 
-            show, 
-            showLoading, 
-            onConfirm, 
-            willOpen, 
-            onResolve, 
-            onError, 
-            children, 
-            ...rest 
+    useEffect(() => {
+        const swalContainer = Swal.getHtmlContainer();
+        if (swalContainer) {
+            const showContainer = props.text || props.html || props.children;
+            swalContainer.style.display = showContainer ? 'block' : 'none';
+        }
+    }, [props.text, props.html, props.children]);
+
+    function mountSwal() {
+        const {
+            show,
+            showLoading,
+            onConfirm,
+            willOpen,
+            onResolve,
+            onError,
+            children,
+            ...rest
         } = props;
 
         rest['willOpen'] = (el: HTMLElement) => {
             forceRerendering();
             willOpen && willOpen(el);
-        }
+        };
 
-        Swal.fire(rest).then((result: SweetAlertResult) => {
-            if (result.isConfirmed)
-                onConfirm && onConfirm(result);
+        Swal.fire(rest)
+            .then((result: SweetAlertResult) => {
+                if (result.isConfirmed) onConfirm && onConfirm(result);
 
-            onResolve && onResolve(result);
-        }).catch(error => onError && onError(error));
+                onResolve && onResolve(result);
+            })
+            .catch((error) => onError && onError(error));
     }
 
     const swalContainer = Swal.getHtmlContainer();
     if (swalContainer && !props.html) {
-        swalContainer.style.display = props.children ? 'block' : 'none';
         return ReactDOM.createPortal(props.children, swalContainer);
     }
 
-    return <></>
+    return <></>;
 }
-
