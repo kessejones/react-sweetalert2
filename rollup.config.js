@@ -10,15 +10,17 @@ export default {
     input: 'src/index.ts',
     output: [
         {
+            entryFile: 'src/index.ts',
+            file: packageJson.module,
+        },
+        {
             file: packageJson.main,
             format: 'cjs',
-            sourcemap: true,
+            sourcemap: false,
             exports: 'named',
             strict: false,
         },
     ],
-    plugins: [
-        typescript(),
-    ],
+    plugins: [typescript()],
     external,
 };

@@ -22,7 +22,7 @@
     ],
     "license": "Apache-2.0",
     "main": "build/index.js",
-    "module": "build/index.esm.js",
+    "module": "build/index.module.js",
     "types": "build/index.d.ts",
     "scripts": {
         "dev": "rollup -cw",

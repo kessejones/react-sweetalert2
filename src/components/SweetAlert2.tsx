@@ -1,3 +1,4 @@
+import 'sweetalert2/dist/sweetalert2.css';
 import React, { ForwardedRef, ReactElement, useEffect } from 'react';
 import Swal, { SweetAlertOptions, SweetAlertResult } from 'sweetalert2';
 import ReactDOM from 'react-dom';
