@@ -40,3 +40,26 @@ jobs:
               uses: coverallsapp/github-action@master
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
+
+    test-bun:
+        name: Test Bun
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Bun
+              uses: actions/setup-bun@v2
+
+            - name: Install React Globaly
+              run: bun i -g react react-dom
+
+            - name: Link Dependencies
+              run: bun link react react-dom
+
+            - name: Run Jest
+              run: bun run test --coverage
+
+            - name: Coveralls
+              uses: coverallsapp/github-action@master
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
