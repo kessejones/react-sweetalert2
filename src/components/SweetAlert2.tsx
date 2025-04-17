@@ -1,4 +1,4 @@
-import React, { ForwardedRef, ReactElement, useEffect } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import Swal, { SweetAlertOptions, SweetAlertResult } from 'sweetalert2';
 import ReactDOM from 'react-dom';
 import { useForceRerendering } from '../Hooks';
@@ -15,7 +15,7 @@ export type SweetAlert2Props = {
 export const withSwal = <ComponentProps extends unknown = any>(
     Component: any
 ) => {
-    return React.forwardRef((props: ComponentProps, ref: ForwardedRef<any>) => (
+    return React.forwardRef<any, ComponentProps>((props, ref) => (
         <Component ref={ref} swal={Swal} {...props} />
     ));
 };

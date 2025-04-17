@@ -1,5 +1,5 @@
 export default {
     testEnvironment: 'jsdom',
     preset: 'ts-jest',
-    testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'],
+    testMatch: ['**/?(*.)+(spec|test).[jt]s?(x)'],
 };
