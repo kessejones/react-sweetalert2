@@ -48,7 +48,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - name: Set up Bun
-              uses: actions/setup-bun@v2
+              uses: oven-sh/setup-bun@v2
 
             - name: Install React Globaly
               run: bun i -g react react-dom
